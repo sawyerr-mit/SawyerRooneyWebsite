@@ -60,14 +60,34 @@
     <div class="panel glass about">
       <div class="prose">
         <p>Nitrogen reaction control system for the MIT Rocket Team's collegiate lander, built around thrust, moment arms and available feed pressure.</p>
-        <p>Add more detail here: the problem, your approach, the results and what you learned. Add as many paragraphs as you need.</p>
+        <p>A reaction control system turns a lander's attitude commands into short, controlled thrust pulses. On a 540 lb vehicle using cold nitrogen, the design is set by three things: how much thrust each nozzle must deliver, how far it sits from the center of mass, and how much feed pressure is left when the gas reaches the nozzle.</p>
+        <p>My work covers both ends of that chain: the nozzle that turns pressure into thrust, and the model that predicts how much pressure arrives at it. Test rigs then check those predictions against real hardware.</p>
       </div>
       <dl class="facts">
-        <div><dt>Role</dt><dd>Add your role</dd></div>
+        <div><dt>Role</dt><dd>Nozzle design, feed-system modeling and test-rig design</dd></div>
         <div><dt>Timeline</dt><dd>Sept 2026 &ndash; Present</dd></div>
         <div><dt>Focus</dt><dd>Aerospace</dd></div>
         <div><dt>Tools</dt><dd>SolidWorks, Python, Fluid mechanics, SLA printing</dd></div>
       </dl>
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section id="approach" class="section wrap">
+    <h2>Approach</h2>
+    <div class="stack">
+      <article class="item glass">
+        <h3>Nozzle design</h3>
+        <p class="muted">The nozzle is an 80%-length bell modeled in SolidWorks. Its contour follows Rao's thrust-optimized parabola method, which approximates the ideal bell shape with a short curved section. The result is shorter and lighter than a full-length bell, with only a small performance penalty.</p>
+      </article>
+      <article class="item glass">
+        <h3>Feed-system model</h3>
+        <p class="muted">A Python model uses the Darcy-Weisbach equation to estimate pressure loss along the feedlines, then carries the result through to the throat to predict stagnation pressure there. That value sets how much thrust the nozzle can produce from the tank pressure available.</p>
+      </article>
+      <article class="item glass">
+        <h3>Testing</h3>
+        <p class="muted">The nozzles are SLA-printed in resin, so the test rigs are designed to characterize how those parts behave and to compare measured performance with the model's predictions. Any gap between the two shows where the model needs work.</p>
+      </article>
     </div>
   </section>
 
