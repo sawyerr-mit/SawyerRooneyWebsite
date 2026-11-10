@@ -13,3 +13,18 @@ if ("IntersectionObserver" in window && targets.length) {
   }, { rootMargin: "-40% 0px -55% 0px" });
   targets.forEach(t => io.observe(t));
 }
+
+// Project pages: show file sizes, and mark downloads that haven't been uploaded yet (deployed site only)
+if (location.protocol.startsWith("http")) {
+  document.querySelectorAll("a.dl[download]").forEach(a => {
+    fetch(a.href, { method: "HEAD" }).then(r => {
+      if (!r.ok) throw 0;
+      const n = +r.headers.get("content-length");
+      if (n) a.querySelector("small").append(", " + (n > 1e6 ? (n / 1e6).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1e3)) + " KB"));
+    }).catch(() => {
+      a.setAttribute("aria-disabled", "true");
+      a.removeAttribute("href");
+      a.querySelector(".pill").textContent = "Coming soon";
+    });
+  });
+}

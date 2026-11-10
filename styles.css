@@ -29,7 +29,7 @@ body{
    hundreds of MB of graphics memory on phones and high-DPI screens). Panels scroll over it. */
 .bg{
   position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;z-index:-1;pointer-events:none;
-  contain:strict;
+  contain:strict;will-change:transform;transform:translateZ(0);
   background-image:
     radial-gradient(circle,rgba(255,255,255,.32) 1.7px,transparent 2.3px),
     radial-gradient(circle,rgba(255,255,255,.15) 1.1px,transparent 1.7px),
@@ -61,24 +61,17 @@ ul{padding:0;list-style:none}
    gradient fill (which also softens the dot grid behind), a bright top rim, an inner edge and a soft shadow.
    No element uses backdrop-filter, so nothing is re-computed while scrolling. */
 .glass{
-  position:relative;
-  border-radius:30px;
-  background:
-    radial-gradient(120% 90% at 0% 0%,rgba(255,255,255,.26),transparent 55%),
-    linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.05) 50%,rgba(255,255,255,.11)),
-    rgba(50,56,218,.52);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255,255,255,.62),
-    inset 0 0 0 1px rgba(255,255,255,.22),
-    inset 0 -2px 3px rgba(255,255,255,.08),
-    0 16px 28px -14px rgba(14,12,110,.55);
+  position:relative;border-radius:30px;
+  background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.07) 45%,rgba(255,255,255,.12)),rgba(50,56,218,.52);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.22);
+  contain:layout paint;
 }
 @media (prefers-reduced-transparency:reduce){
   .glass{background:rgba(48,48,180,.85)}
 }
 @media (hover:hover){
-  .card,.item,.skill{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-  .card:hover,.item:hover,.skill:hover{transform:translateY(-4px)}
+  .card{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+  .card:hover{transform:translateY(-4px)}
 }
 
 /* ---------- nav ---------- */
@@ -88,7 +81,6 @@ ul{padding:0;list-style:none}
   display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:9px 10px 9px 26px;
   background:
-    radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.26),transparent 55%),
     linear-gradient(150deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 50%,rgba(255,255,255,.1)),
     rgb(52,56,222);
 }
@@ -272,4 +264,33 @@ h3{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.35}
 }
 @media (prefers-reduced-motion:reduce){
   .card,.item,.skill,.btn{transition:none}
+}
+
+/* ---------- skip rendering off-screen sections until they near the viewport ---------- */
+.section~.section{content-visibility:auto;contain-intrinsic-size:auto 500px}
+
+/* ---------- project pages ---------- */
+.stretch::after{content:"";position:absolute;inset:0;border-radius:30px}
+.stretch:focus-visible{outline:0}
+.stretch:focus-visible::after{outline:2px solid #fff;outline-offset:-4px}
+.more{margin-top:20px;font-size:14.5px;font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.back{display:inline-block;margin-bottom:20px;font-weight:500;color:var(--ink-soft)}
+.back:hover{color:#fff}
+.p-head h1{font-size:clamp(36px,5.4vw,64px)}
+.p-head .sub{margin-top:18px}
+.pf{margin-top:22px;border-radius:30px}
+.pf .media.wide{margin-bottom:0}
+button.btn{border:0}
+.downloads{display:grid;gap:12px}
+.dl{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-radius:20px;
+  background:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 0 0 1px rgba(255,255,255,.18)}
+.dl b{display:block;font-weight:600}
+.dl small{color:var(--ink-mute);font-size:13.5px}
+a.dl:hover{background:rgba(255,255,255,.2)}
+.dl[aria-disabled=true]{opacity:.6}
+@media print{
+  .bg,.nav-wrap,.actions,.footer,.back,.media-ph,body::before{display:none!important}
+  body{background:#fff}
+  *{color:#111!important;background:none!important;box-shadow:none!important}
+  .section{content-visibility:visible!important;padding:14px 0}
 }
