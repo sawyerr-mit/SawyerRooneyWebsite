@@ -22,26 +22,25 @@ body{
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
 
-  position:relative;
   background-color:var(--base-2);
 }
-/* backdrop: dot-grid pips (major + minor), soft color glows, base gradient. Static, on its own cached layer. */
+/* backdrop: dot-grid pips (major + minor), soft color glows, base gradient.
+   Fixed and viewport-sized, so it is painted once and never grows with the page (a page-tall layer costs
+   hundreds of MB of graphics memory on phones and high-DPI screens). Panels scroll over it. */
 .bg{
-  position:absolute;inset:0;z-index:-1;pointer-events:none;
-  transform:translateZ(0);
+  position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;z-index:-1;pointer-events:none;
+  contain:strict;
   background-image:
     radial-gradient(circle,rgba(255,255,255,.32) 1.7px,transparent 2.3px),
     radial-gradient(circle,rgba(255,255,255,.15) 1.1px,transparent 1.7px),
-    radial-gradient(circle min(58vmax,820px) at 0% 4%,rgba(121,160,255,.8),transparent),
-    radial-gradient(circle min(54vmax,780px) at 100% 11%,rgba(131,80,255,.5),transparent),
-    radial-gradient(circle min(56vmax,800px) at 0% 29%,rgba(63,188,255,.55),transparent),
-    radial-gradient(circle min(58vmax,820px) at 100% 48%,rgba(121,160,255,.65),transparent),
-    radial-gradient(circle min(54vmax,780px) at 0% 66%,rgba(131,80,255,.45),transparent),
-    radial-gradient(circle min(56vmax,800px) at 100% 85%,rgba(63,188,255,.5),transparent),
-    linear-gradient(175deg,var(--base-1) 0%,var(--base-2) 45%,var(--base-3) 100%);
-  background-size:112px 112px,28px 28px,auto,auto,auto,auto,auto,auto,auto;
-  background-position:-14px -14px,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0;
-  background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
+    radial-gradient(circle min(62vmax,820px) at 0% 0%,rgba(121,160,255,.8),transparent),
+    radial-gradient(circle min(58vmax,780px) at 100% 18%,rgba(131,80,255,.5),transparent),
+    radial-gradient(circle min(60vmax,800px) at 0% 62%,rgba(63,188,255,.5),transparent),
+    radial-gradient(circle min(62vmax,820px) at 100% 100%,rgba(121,160,255,.7),transparent),
+    linear-gradient(175deg,var(--base-1) 0%,var(--base-2) 50%,var(--base-3) 100%);
+  background-size:112px 112px,28px 28px,auto,auto,auto,auto,auto;
+  background-position:-14px -14px,0 0,0 0,0 0,0 0,0 0,0 0;
+  background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
 }
 body::before{ /* fills the phone's top inset */
   content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--base-1);
@@ -60,7 +59,7 @@ ul{padding:0;list-style:none}
    Real backdrop blur on ~20 large panels made scrolling drop to ~30 fps in testing, and it was the only
    expensive thing on the page. The backdrop is static, so frosted glass is painted instead: a tinted
    gradient fill (which also softens the dot grid behind), a bright top rim, an inner edge and a soft shadow.
-   Real blur is kept only on the small nav bar. */
+   No element uses backdrop-filter, so nothing is re-computed while scrolling. */
 .glass{
   position:relative;
   border-radius:30px;
@@ -72,8 +71,7 @@ ul{padding:0;list-style:none}
     inset 0 1.5px 0 rgba(255,255,255,.62),
     inset 0 0 0 1px rgba(255,255,255,.22),
     inset 0 -2px 3px rgba(255,255,255,.08),
-    inset 0 0 36px rgba(255,255,255,.06),
-    0 24px 44px -20px rgba(14,12,110,.6);
+    0 16px 28px -14px rgba(14,12,110,.55);
 }
 @media (prefers-reduced-transparency:reduce){
   .glass{background:rgba(48,48,180,.85)}
@@ -89,7 +87,10 @@ ul{padding:0;list-style:none}
   max-width:var(--wrap);margin:0 auto;border-radius:999px;
   display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:9px 10px 9px 26px;
-  -webkit-backdrop-filter:blur(12px) saturate(150%);backdrop-filter:blur(12px) saturate(150%);
+  background:
+    radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.26),transparent 55%),
+    linear-gradient(150deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 50%,rgba(255,255,255,.1)),
+    rgb(52,56,222);
 }
 .mark{font-weight:700;letter-spacing:-.015em;font-size:16.5px;white-space:nowrap}
 .nav-links{display:flex;align-items:center;gap:4px;font-size:14.5px;font-weight:500}
@@ -140,14 +141,13 @@ ul{padding:0;list-style:none}
 .status{
   display:inline-flex;align-items:center;gap:10px;margin-bottom:26px;
   padding:8px 16px 8px 14px;border-radius:999px;font-size:13.5px;font-weight:500;color:var(--ink-soft);
-  background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.09));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.2),0 8px 16px -8px rgba(16,14,120,.5);
+  background:rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 1px rgba(255,255,255,.2);
 }
 .dot{width:8px;height:8px;border-radius:50%;background:#7dffb8;box-shadow:0 0 0 4px rgba(125,255,184,.22)}
 h1{
   font-size:clamp(50px,7.4vw,92px);font-weight:700;letter-spacing:-.04em;line-height:1;
-  background:linear-gradient(180deg,#fff 35%,#cdd8ff 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
+  color:#f6f8ff;
   text-wrap:balance;
 }
 .sub{margin-top:28px;font-size:20px;line-height:1.6;color:var(--ink-soft);max-width:30em}
@@ -155,8 +155,8 @@ h1{
 .hero .chips{margin-top:30px}
 .chips li{
   padding:6px 14px;border-radius:999px;font-size:13.5px;font-weight:500;color:var(--ink-soft);
-  background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 1px rgba(255,255,255,.18);
+  background:rgba(255,255,255,.13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 0 1px rgba(255,255,255,.2);
 }
 .actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
 .actions.center{justify-content:center}
@@ -166,15 +166,12 @@ h1{
 /* ---------- image slots ---------- */
 .media{
   position:relative;overflow:hidden;border-radius:22px;
-  display:grid;place-items:center;
   background:rgba(255,255,255,.07);
-  border:1.5px dashed rgba(255,255,255,.34);
 }
 .media.portrait{aspect-ratio:4/5}
 .media.wide{aspect-ratio:16/9;border-radius:18px;margin-bottom:24px}
-.media:has(img){border-color:transparent;background:none}
 .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.media-ph{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:14px;font-weight:500;color:var(--ink-mute);padding:16px}
+.media-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;font-size:14px;font-weight:500;color:var(--ink-mute);padding:16px;border:1.5px dashed rgba(255,255,255,.34);border-radius:inherit}
 .media-ph small{font-size:12px;font-weight:400;opacity:.8}
 
 /* ---------- sections ---------- */
@@ -189,14 +186,14 @@ h3{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.35}
 .muted{color:var(--ink-soft);font-size:16px;margin-top:10px}
 .pill{
   display:inline-block;white-space:nowrap;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:#fff;
-  background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.1));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.22);
+  background:rgba(255,255,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 1px rgba(255,255,255,.24);
 }
 .bullets{display:grid;gap:11px;color:var(--ink-soft);font-size:16px}
 .bullets li{position:relative;padding-left:22px}
 .bullets li::before{
   content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;
-  background:linear-gradient(180deg,#fff,#b9c9ff);
+  background:#e3eaff;
 }
 
 .panel{padding:44px 48px}
