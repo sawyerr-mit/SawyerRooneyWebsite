@@ -146,7 +146,7 @@ ul{padding:0;list-style:none}
 }
 .dot{width:8px;height:8px;border-radius:50%;background:#7dffb8;box-shadow:0 0 0 4px rgba(125,255,184,.22)}
 h1{
-  font-size:clamp(50px,7.4vw,92px);font-weight:700;letter-spacing:-.04em;line-height:1;
+  font-size:clamp(50px,7.4vw,92px);font-weight:700;letter-spacing:-.04em;line-height:1.1;
   color:#f6f8ff;
   text-wrap:balance;
 }
