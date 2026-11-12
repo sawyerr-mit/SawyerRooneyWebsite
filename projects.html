@@ -79,13 +79,10 @@
         <div class="media wide peek" aria-hidden="true"><pre>def minimax(board, depth, alpha, beta, maximizing, player):
     opponent = P1 if player == P2 else P2
 
-    # If there are no valid moves remaining the game is a draw
     valid_cols = valid_moves(board)
     if not valid_cols:
         return 0, None
 
-    # Check if the side to move has an immediate win. If so retu
-    # for the AI or negative infinity for the opponent
     for col in valid_cols:
         row = drop(board, col, player if maximizing else opponen
         if row != -1:
@@ -121,7 +118,7 @@
         <p class="more"><a class="btn primary small" href="projects/svd.html" aria-label="View project: SVD image compression">View project</a></p>
       </article>
       <article class="card glass" data-date="2025-01" data-scale="1">
-        <div class="media wide peek" aria-hidden="true"><pre># https://en.wikipedia.org/wiki/Companion_matrix
+        <div class="media wide peek" aria-hidden="true"><pre>
 def companion_matrix(coeffs):
     coeffs = np.asarray(coeffs, dtype=float)
 
