@@ -50,3 +50,33 @@ if (location.protocol.startsWith("http")) {
     });
   });
 }
+
+// Project pages: click an image to enlarge it (Esc, the Close button or a click anywhere closes it)
+const shots = document.querySelectorAll(".shot img");
+if (shots.length && typeof HTMLDialogElement === "function") {
+  const dlg = document.createElement("dialog");
+  dlg.className = "lightbox";
+  dlg.setAttribute("aria-label", "Enlarged image");
+  dlg.innerHTML = '<div class="lb-inner"><img alt=""><p class="lb-cap"></p><button class="btn primary small" type="button">Close</button></div>';
+  document.body.appendChild(dlg);
+  const big = dlg.querySelector("img"), cap = dlg.querySelector(".lb-cap");
+  const openShot = img => {
+    big.src = img.currentSrc || img.src;
+    big.alt = img.alt;
+    const fc = img.parentElement.querySelector("figcaption");
+    cap.textContent = fc ? fc.textContent : "";
+    document.documentElement.style.overflow = "hidden";
+    dlg.showModal();
+  };
+  dlg.addEventListener("click", () => dlg.close());
+  dlg.addEventListener("close", () => { document.documentElement.style.overflow = ""; });
+  shots.forEach(img => {
+    img.tabIndex = 0;
+    img.setAttribute("role", "button");
+    img.setAttribute("aria-label", "Enlarge image: " + img.alt);
+    img.addEventListener("click", () => openShot(img));
+    img.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openShot(img); }
+    });
+  });
+}
