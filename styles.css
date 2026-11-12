@@ -253,7 +253,6 @@ h3{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.35}
 .section~.section{content-visibility:auto;contain-intrinsic-size:auto 500px}
 
 /* ---------- projects tab and project pages ---------- */
-.nav{padding:9px 10px}
 .btn.active,.btn[aria-pressed=true]{box-shadow:inset 0 1.5px 0 #fff,inset 0 -4px 8px rgba(80,92,235,.3),0 0 0 3px rgba(255,255,255,.55),0 10px 20px -8px rgba(16,14,120,.65)}
 .btn small{margin-left:10px;font-size:12px;font-weight:600;opacity:.7}
 .btn.inline{margin:0 2px}
@@ -304,3 +303,15 @@ a.dl[aria-disabled=true]{opacity:.55;pointer-events:none}
   *{color:#111!important;background:none!important;box-shadow:none!important}
   .section{content-visibility:visible!important;padding:14px 0}
 }
+
+/* ---------- top nav bar: original text-link look (overrides the white-button classes), Projects listed first ---------- */
+.nav .btn.mark{padding:0;border-radius:0;background:none;box-shadow:none;text-shadow:none;color:var(--ink);font:700 16.5px/1.65 var(--sans);letter-spacing:-.015em;white-space:nowrap}
+.nav .btn.mark:hover{transform:none}
+.nav .nav-links>a.btn{padding:9px 15px;border-radius:999px;background:none;box-shadow:none;text-shadow:none;color:var(--ink-soft);font:500 14.5px/1.65 var(--sans);letter-spacing:normal;white-space:nowrap}
+.nav .nav-links>a.btn:hover{background:rgba(255,255,255,.14);color:#fff;transform:none}
+.nav .nav-links>a.btn.active{background:rgba(255,255,255,.2);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.nav .nav-links>a.btn[href$="#contact"]{margin-left:6px;padding:10px 20px;font:600 14px/1 var(--sans);letter-spacing:-.005em;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.1) 55%,rgba(255,255,255,.18) 100%);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.7),inset 0 -3px 6px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.28),0 12px 22px -8px rgba(16,14,120,.55),0 3px 6px rgba(16,14,120,.25)}
+.nav .nav-links>a.btn[href$="#contact"]:hover{background:linear-gradient(180deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.1) 55%,rgba(255,255,255,.18) 100%);transform:translateY(-3px)}
+.nav .nav-links>a[href$="projects.html"]{order:-1}
