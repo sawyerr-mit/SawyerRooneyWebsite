@@ -69,10 +69,6 @@ ul{padding:0;list-style:none}
 @media (prefers-reduced-transparency:reduce){
   .glass{background:rgba(48,48,180,.85)}
 }
-@media (hover:hover){
-  .card{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-  .card:hover{transform:translateY(-4px)}
-}
 
 /* ---------- nav ---------- */
 .nav-wrap{position:sticky;top:calc(14px + env(safe-area-inset-top,0px));z-index:30;padding:14px max(16px,env(safe-area-inset-left,0px)) 0}
@@ -246,7 +242,7 @@ h3{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.35}
   .email{font-size:19px}
 }
 @media (prefers-reduced-motion:reduce){
-  .card,.item,.skill,.btn{transition:none}
+  .item,.skill,.btn{transition:none}
 }
 
 /* ---------- skip rendering off-screen sections until they near the viewport ---------- */
@@ -264,10 +260,6 @@ button.btn{border:0}
 .sort-note{color:var(--ink-mute);font-size:14.5px}
 .scale-key{margin:14px 0 30px 22px;max-width:46em;color:var(--ink-mute);font-size:14.5px}
 .chips li.scale{background:rgba(255,255,255,.26);color:#fff;font-weight:600}
-.stretch::after{content:"";position:absolute;inset:0;border-radius:30px}
-.card .btn.stretch{position:static}
-.card .stretch:focus-visible{outline:0}
-.card .stretch:focus-visible::after{outline:3px solid #fff;outline-offset:-5px}
 .media.fit img{object-fit:contain;background:#fff}
 .media.peek{background:rgba(10,12,90,.5)}
 .peek pre{margin:0;padding:18px 20px;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-soft);overflow:hidden;white-space:pre}
