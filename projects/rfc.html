@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hazardous asteroid classifier | Sawyer Rooney</title>
+  <meta name="description" content="A Random Forest that predicts whether an asteroid is potentially hazardous, trained on about 10,000 objects from NASA&#x27;s NeoWs API.">
+  <meta name="theme-color" content="#3236e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a class="btn primary small mark" href="../index.html">Sawyer Rooney</a>
+    <div class="nav-links">
+      <a class="btn primary small" href="../index.html#about">About</a>
+      <a class="btn primary small" href="../index.html#experience">Experience</a>
+      <a class="btn primary small active" href="../projects.html" aria-current="page">Projects</a>
+      <a class="btn primary small" href="../index.html#education">Education</a>
+      <a class="btn primary small" href="../index.html#skills">Skills</a>
+      <a class="btn primary small" href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="section wrap">
+    <a class="btn primary small" href="../projects.html">All projects</a>
+    <div class="panel glass p-head">
+      <p class="kicker">Machine learning &middot; Spring 2026</p>
+      <h1>Hazardous asteroid classifier</h1>
+      <p class="sub">A Random Forest that predicts whether an asteroid is potentially hazardous, trained on about 10,000 objects from NASA&#x27;s NeoWs API.</p>
+      <ul class="chips" aria-label="Tools"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>REST APIs</li></ul>
+      <div class="actions">
+        <a class="btn primary" href="#downloads">Downloads</a>
+        <a class="btn primary" href="https://github.com/sawyerr-mit/Projects/tree/main/RFC%20for%20Hazardous%20Asteroids" target="_blank" rel="noopener">View on GitHub</a>
+        <button class="btn primary" type="button" onclick="print()">Save page as PDF</button>
+      </div>
+    </div>
+    <div class="gallery single"><figure class="shot glass"><img src="../assets/projects/rfc/confusion-matrix.png" alt="Confusion matrices on the validation split, as percentages and as counts." loading="lazy" decoding="async"><figcaption>Confusion matrices on the validation split, as percentages and as counts.</figcaption></figure></div>
+  </section>
+
+  <section id="overview" class="section wrap">
+    <h2>Overview</h2>
+    <div class="panel glass about">
+      <div class="prose"><p>The notebook pages through NASA&#x27;s NeoWs API, flattens the JSON into a pandas DataFrame, drops the few rows with missing values and trains a Random Forest on five features: absolute magnitude, minimum and maximum estimated diameter, relative velocity and miss distance.</p><p>Hazardous asteroids are rare, so the forest weights that class 50 to 1. That trades some overall accuracy for much better recall on the class that matters. On the validation split it flagged 60 of 72 hazardous asteroids (83.3%) and cleared 1,766 of 1,925 non-hazardous ones (91.7%).</p><p>Based on CIS 454 (AI and Advanced Python) Assignment 4, University of Maine at Augusta, Spring 2026.</p></div>
+      <dl class="facts"><div><dt>Role</dt><dd>Data collection, modeling and evaluation</dd></div><div><dt>Timeline</dt><dd>Spring 2026</dd></div><div><dt>Focus</dt><dd>Machine learning</dd></div><div><dt>Tools</dt><dd>Python, pandas, scikit-learn, REST APIs</dd></div></dl>
+    </div>
+  </section>
+  
+  <section id="highlights" class="section wrap">
+    <h2>Highlights</h2>
+    <div class="panel glass"><ul class="bullets"><li>Pulled and flattened roughly 10,000 asteroid records from NASA&#x27;s REST API with requests and pandas.</li><li>Weighted the hazardous class 50 to 1 to favor recall on the rare class that matters.</li><li>Flagged 60 of 72 hazardous asteroids (83.3%) on the held-out 20% validation split.</li></ul></div>
+  </section>
+  <section id="source" class="section wrap"><h2>Source code</h2><div class="stack"></div><div class="actions"><a class="btn primary small" href="https://github.com/sawyerr-mit/Projects/blob/main/RFC%20for%20Hazardous%20Asteroids/NASA_Asteroid_Hazard_Classifier.ipynb" target="_blank" rel="noopener">View NASA_Asteroid_Hazard_Classifier.ipynb on GitHub</a><a class="btn primary small" href="https://github.com/sawyerr-mit/Projects/blob/main/RFC%20for%20Hazardous%20Asteroids/README.md" target="_blank" rel="noopener">View README.md on GitHub</a></div><div class="panel glass runbox"><h3 class="runh">Run it</h3><pre class="run"><code>export NASA_API_KEY=your-key   # free at api.nasa.gov
+jupyter notebook NASA_Asteroid_Hazard_Classifier.ipynb</code></pre><p class="muted">Install dependencies with <code>pip install -r requirements.txt</code> from the <a class="btn primary small inline" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">Projects repository</a>.</p></div></section>
+  <section id="downloads" class="section wrap">
+    <h2>Downloads</h2>
+    <div class="panel glass"><div class="downloads"><a class="btn primary get dl" href="../assets/projects/rfc/rfc-source.zip" download><span>Source files (ZIP)</span><small>ZIP</small></a><a class="btn primary get dl" href="../assets/projects/rfc/NASA_Asteroid_Hazard_Classifier.ipynb" download><span>NASA_Asteroid_Hazard_Classifier.ipynb</span><small>IPYNB</small></a><a class="btn primary get dl" href="../assets/projects/rfc/README.md" download><span>README.md</span><small>MD</small></a></div></div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>&copy; <span id="yr">2026</span> Sawyer Rooney</span>
+  <div class="foot-links">
+    <a class="btn primary small" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn primary small" href="https://www.linkedin.com/in/sawyer-rooney-ab3384444/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn primary small" href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="../script.js" defer></script>
+</body>
+</html>

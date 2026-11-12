@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BFS, Dijkstra and A* on a road graph | Sawyer Rooney</title>
+  <meta name="description" content="Three shortest-path searches written from scratch and compared on a road graph of about 104,000 vertices.">
+  <meta name="theme-color" content="#3236e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a class="btn primary small mark" href="../index.html">Sawyer Rooney</a>
+    <div class="nav-links">
+      <a class="btn primary small" href="../index.html#about">About</a>
+      <a class="btn primary small" href="../index.html#experience">Experience</a>
+      <a class="btn primary small active" href="../projects.html" aria-current="page">Projects</a>
+      <a class="btn primary small" href="../index.html#education">Education</a>
+      <a class="btn primary small" href="../index.html#skills">Skills</a>
+      <a class="btn primary small" href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="section wrap">
+    <a class="btn primary small" href="../projects.html">All projects</a>
+    <div class="panel glass p-head">
+      <p class="kicker">Algorithms &middot; Spring 2026</p>
+      <h1>BFS, Dijkstra and A* on a road graph</h1>
+      <p class="sub">Three shortest-path searches written from scratch and compared on a road graph of about 104,000 vertices.</p>
+      <ul class="chips" aria-label="Tools"><li>Python</li><li>Graph algorithms</li><li>Priority queues</li><li>Matplotlib</li></ul>
+      <div class="actions">
+        <a class="btn primary" href="#downloads">Downloads</a>
+        <a class="btn primary" href="https://github.com/sawyerr-mit/Projects/tree/main/Djikstra%27s%20Algorithm" target="_blank" rel="noopener">View on GitHub</a>
+        <button class="btn primary" type="button" onclick="print()">Save page as PDF</button>
+      </div>
+    </div>
+    <div class="gallery"><figure class="shot glass"><img src="../assets/projects/dijkstra/road-graph-search.png" alt="The vertices each algorithm explores on the road graph." loading="lazy" decoding="async"><figcaption>The vertices each algorithm explores on the road graph.</figcaption></figure><figure class="shot glass"><img src="../assets/projects/dijkstra/comparison.png" alt="Pops from the frontier, runtime and path weight for each algorithm." loading="lazy" decoding="async"><figcaption>Pops from the frontier, runtime and path weight for each algorithm.</figcaption></figure></div>
+  </section>
+
+  <section id="overview" class="section wrap">
+    <h2>Overview</h2>
+    <div class="panel glass about">
+      <div class="prose"><p>I implemented a weighted graph class, an indexed minimum priority queue, and three searches: breadth-first search, Dijkstra&#x27;s algorithm and A*. A notebook runs all three between the same pair of points and plots the vertices each one explores.</p><p>On the included road graph (103,959 vertices), BFS popped 16,109 vertices, Dijkstra 23,416 and A* 10,328. Dijkstra and A* both found the lowest-weight path (0.078767). BFS minimizes edge count rather than weight, so it returned a heavier path (0.084463).</p><p>Adapted from CIS 454 (AI and Advanced Python) Assignment 6, University of Maine at Augusta, Spring 2026. Original assignment given by Rocko Graziano.</p></div>
+      <dl class="facts"><div><dt>Role</dt><dd>Implementation and analysis</dd></div><div><dt>Timeline</dt><dd>Spring 2026</dd></div><div><dt>Focus</dt><dd>Algorithms</dd></div><div><dt>Tools</dt><dd>Python, Graph algorithms, Priority queues, Matplotlib</dd></div></dl>
+    </div>
+  </section>
+  
+  <section id="highlights" class="section wrap">
+    <h2>Highlights</h2>
+    <div class="panel glass"><ul class="bullets"><li>Built a weighted graph class and an indexed minimum priority queue.</li><li>Implemented BFS, Dijkstra&#x27;s algorithm and A* with a shared interface and pop counting.</li><li>A* found the same lowest-weight path as Dijkstra with fewer than half the frontier pops.</li></ul></div>
+  </section>
+  <section id="source" class="section wrap"><h2>Source code</h2><div class="stack"><details class="code glass"><summary><span class="btn primary small"><span class="c-show">Show</span><span class="c-hide">Hide</span>&nbsp;search.py</span><small>234 lines</small></summary><pre><code>&quot;&quot;&quot;
+search.py
+
+BFS, Dijkstra and A* graph searches.
+
+Adapted from CIS 454 (AI and Advanced Python) Assignment 6, University of Maine at Augusta,
+Spring 2026. Original assignment given by Rocko Graziano.
+&quot;&quot;&quot;
+
+import math
+import pickle
+from collections import deque
+from typing import Optional
+
+from IndexMinPQ import *
+from graph import Graph
+
+
+def _build_path(prior: dict, t: int) -&gt; list[int]:
+    &quot;&quot;&quot; Walk the prior links back from t to the source (whose prior is None). &quot;&quot;&quot;
+    path = []
+    node = t
+    while node is not None:
+        path.append(node)
+        node = prior.get(node)
+    path.reverse()
+    return path
+
+
+def BFS(G: Graph, s: int, t: int, debug: bool = False,
+        trace: Optional[list] = None) -&gt; tuple[list[int], int, int]:
+    &quot;&quot;&quot;
+    Find the path with the fewest edges from s to t in an unweighted search.
+    The target is considered found when it is first encountered, not when it is popped.
+
+    trace: optional list; every popped node is appended in pop order (for plotting).
+
+    return:  path        - a list of the nodes from s to t, including both
+             path length - the number of edges in the path
+             popcount    - the number of pops from the search frontier
+    &quot;&quot;&quot;
+
+    popcount = 0
+
+    print(f&#x27;\nUsing BFS to find path from {s} to {t}&#x27;)
+
+    # Trivial case: the target is the source (it would otherwise never be &quot;encountered&quot;)
+    if s == t:
+        return [s], 0, popcount
+
+    explored = {s: True}        # Source node starts explored
+    prior = {s: None}           # Source node doesn&#x27;t have a prior node
+    frontier = deque([s])
+
+    while frontier:
+
+        # Pop the first node off; the first iteration returns the source node
+        v = frontier.popleft()
+        popcount += 1
+        if trace is not None:
+            trace.append(v)
+        if debug:
+            print(f&#x27;  pop #{popcount}: {v}&#x27;)
+
+        # Iterate over all the edges connected to the current node (breadth)
+        for edge in G.edgesOf(v):
+            u = edge.t
+
+            # Only look at nodes that haven&#x27;t been explored
+            if not explored.get(u, False):
+                explored[u] = True
+                prior[u] = v
+
+                # Target found when first encountered: rebuild and return the path
+                if u == t:
+                    path = _build_path(prior, t)
+                    return path, len(path) - 1, popcount
+
+                frontier.append(u)
+
+    # Return flag data in case no path exists
+    return [], -1, popcount
+
+
+def Dijkstra(G: Graph, s: int, t: int, debug: bool = False,
+             trace: Optional[list] = None) -&gt; tuple[list[int], float, int]:
+    &quot;&quot;&quot;
+    Find the shortest path (by edge weights) from s to t in a weighted graph.
+
+    trace: optional list; every popped node is appended in pop order (for plotting).
+
+    return:  path     - a list of the nodes from s to t, including both
+             distance - the sum of the edge weights from s to t
+             popcount - the number of pops from the search frontier
+    &quot;&quot;&quot;
+
+    popcount = 0
+
+    print(f&#x27;\nUsing Dijkstra to find path from {s} to {t}&#x27;)
+
+    prior = {s: None}                   # Stores previous nodes visited
+    pathcost = {s: 0}                   # Cheapest known cost from s to each node
+    frontier = IndexMinPQ(G.sizeV())    # Min priority queue keyed by cost
+
+    # Every node starts at infinity except the source
+    for v in G.getVertices():
+        frontier.push(v.id, 0 if v.id == s else math.inf)
+
+    while not frontier.isEmpty():
+
+        v, cost = frontier.pop()
+        popcount += 1
+        if trace is not None:
+            trace.append(v)
+        if debug:
+            print(f&#x27;  pop #{popcount}: {v} (cost {cost:.6g})&#x27;)
+
+        # Everything left is unreachable from s, so stop searching
+        if cost == math.inf:
+            break
+
+        # Because the frontier is a min priority queue, t is only popped once
+        # its cheapest path has been found
+        if v == t:
+            return _build_path(prior, t), pathcost[t], popcount
+
+        # Relax every edge leaving v
+        for edge in G.edgesOf(v):
+            u = edge.t
+            new_cost = pathcost[v] + edge.weight
+
+            if new_cost &lt; pathcost.get(u, math.inf):
+                prior[u] = v
+                pathcost[u] = new_cost
+                if frontier.contains(u):
+                    frontier.update(u, new_cost)
+
+    # Return flag data in case no path exists
+    return [], -1, popcount
+
+
+def aStar(G: Graph, s: int, t: int, debug: bool = False,
+          trace: Optional[list] = None) -&gt; tuple[list[int], float, int]:
+    &quot;&quot;&quot;
+    Find the shortest path (by edge weights) from s to t in a weighted graph,
+    guided by a euclidean-distance heuristic on each vertex&#x27;s lat/lon.
+
+    trace: optional list; every popped node is appended in pop order (for plotting).
+
+    return:  path     - a list of the nodes from s to t, including both
+             distance - the distance from s to t
+             popcount - the number of pops from the search frontier
+    &quot;&quot;&quot;
+
+    def H(u: int, v: int) -&gt; float:
+        &quot;&quot;&quot; Euclidean distance between the lat/lon of vertices u and v. &quot;&quot;&quot;
+        tags_u = G.getTags(u)
+        tags_v = G.getTags(v)
+        lat_u, lon_u = tags_u[&#x27;lat&#x27;], tags_u[&#x27;lon&#x27;]
+        lat_v, lon_v = tags_v[&#x27;lat&#x27;], tags_v[&#x27;lon&#x27;]
+        return math.sqrt((lat_u - lat_v) ** 2 + (lon_u - lon_v) ** 2)
+
+    popcount = 0
+
+    print(f&#x27;\nUsing A* to find path from {s} to {t}&#x27;)
+
+    prior = {s: None}                   # Stores previous nodes visited
+    pathcost = {s: 0}                   # g(n): cheapest known cost from s to n
+    frontier = IndexMinPQ(G.sizeV())    # Keyed by f(n) = g(n) + H(n, t)
+
+    # The only difference from Dijkstra&#x27;s setup: the source starts at H(s, t), not 0
+    for v in G.getVertices():
+        frontier.push(v.id, H(s, t) if v.id == s else math.inf)
+
+    while not frontier.isEmpty():
+
+        v, cost = frontier.pop()
+        popcount += 1
+        if trace is not None:
+            trace.append(v)
+        if debug:
+            print(f&#x27;  pop #{popcount}: {v} (f {cost:.6g})&#x27;)
+
+        # Everything left is unreachable from s, so stop searching
+        if cost == math.inf:
+            break
+
+        # With a consistent heuristic the first pop of t is on a cheapest path
+        if v == t:
+            return _build_path(prior, t), pathcost[t], popcount
+
+        for edge in G.edgesOf(v):
+            u = edge.t
+            new_g = pathcost[v] + edge.weight
+
+            if new_g &lt; pathcost.get(u, math.inf):
+                prior[u] = v
+                pathcost[u] = new_g
+                # The key is g plus the heuristic, so nodes heading toward t pop
+                # first. You wouldn&#x27;t start driving north to get to Florida.
+                if frontier.contains(u):
+                    frontier.update(u, new_g + H(u, t))
+
+    # Return flag data in case no path exists
+    return [], -1, popcount
+
+
+if __name__ == &quot;__main__&quot;:
+    import os
+
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    testcases = [(&#x27;romania.pickle&#x27;, 0, 1, False),
+                 (&#x27;romania.pickle&#x27;, 13, 4, False),
+                 (&#x27;kennebec.pickle&#x27;, 31358, 101336, False),
+                 ]
+
+    for testcase in testcases:
+        print(f&#x27;\nTesting against {testcase[0]}\n&#x27;)
+
+        with open(testcase[0], &#x27;rb&#x27;) as f:
+            G = pickle.load(f)
+
+        print(f&#x27;There are {G.sizeV()} nodes in this graph&#x27;)
+
+        path, pathlength, popcount = BFS(G, testcase[1], testcase[2], debug=testcase[3])
+        print(f&#x27;BFS Path is {pathlength} edges long; found in {popcount:,d} pops\n{path}&#x27;)
+
+        path, pathlength, popcount = Dijkstra(G, testcase[1], testcase[2], debug=testcase[3])
+        print(f&#x27;Dijkstra Path is {pathlength} long in {len(path)-1} edges; found in {popcount:,d} pops\n{path} &#x27;)
+
+        path, pathlength, popcount = aStar(G, testcase[1], testcase[2], debug=testcase[3])
+        print(f&#x27;A* Path is {pathlength} long in {len(path)-1} edges; found in {popcount:,d} pops\n{path} &#x27;)
+</code></pre></details><details class="code glass"><summary><span class="btn primary small"><span class="c-show">Show</span><span class="c-hide">Hide</span>&nbsp;graph.py</span><small>78 lines</small></summary><pre><code>&quot;&quot;&quot;
+graph.py
+
+Minimal undirected/directed weighted graph. Attribute names (V, id, tags, edges,
+s, t, weight) match the fields stored in the .pickle files, so do not rename them.
+&quot;&quot;&quot;
+
+
+class Graph:
+
+    class Edge:
+        def __init__(self, s: int, t: int, weight: float = 1.0):
+            self.s = s
+            self.t = t
+            self.weight = weight
+
+        def __repr__(self):
+            return f&#x27;Edge({self.s}-&gt;{self.t}, w={self.weight:.6g})&#x27;
+
+    class Vertex:
+        def __init__(self, id: int, tags: dict = None):
+            self.id = id
+            self.tags = tags if tags is not None else {}
+            self.edges = set()          # set of Graph.Edge (default identity hash)
+
+        def __repr__(self):
+            return f&#x27;Vertex({self.id}, {len(self.edges)} edges)&#x27;
+
+    def __init__(self):
+        self.V = []
+
+    # ---- building -------------------------------------------------------
+    def addVertex(self, tags: dict = None) -&gt; int:
+        v = Graph.Vertex(len(self.V), tags)
+        self.V.append(v)
+        return v.id
+
+    def addEdge(self, s: int, t: int, weight: float = 1.0, directed: bool = False):
+        self._vertex(s).edges.add(Graph.Edge(s, t, weight))
+        if not directed:
+            self._vertex(t).edges.add(Graph.Edge(t, s, weight))
+
+    # ---- queries --------------------------------------------------------
+    def _vertex(self, v: int):
+        &quot;&quot;&quot;Fast path: vertex id == list index (true for the provided data).&quot;&quot;&quot;
+        if 0 &lt;= v &lt; len(self.V) and self.V[v].id == v:
+            return self.V[v]
+        idx = self.__dict__.get(&#x27;_idx&#x27;)
+        if idx is None:
+            idx = self.__dict__[&#x27;_idx&#x27;] = {x.id: x for x in self.V}
+        return idx[v]
+
+    def sizeV(self) -&gt; int:
+        return len(self.V)
+
+    def sizeE(self) -&gt; int:
+        return sum(len(v.edges) for v in self.V)
+
+    def getVertices(self):
+        return self.V
+
+    def getVertex(self, v: int):
+        return self._vertex(v)
+
+    def getTags(self, v: int) -&gt; dict:
+        return self._vertex(v).tags
+
+    def edgesOf(self, v: int):
+        return self._vertex(v).edges
+
+    def __repr__(self):
+        return f&#x27;Graph(|V|={self.sizeV()}, |E|={self.sizeE()})&#x27;
+
+
+# Aliases in case a pickle references module-level names (graph.Vertex / graph.Edge)
+Vertex = Graph.Vertex
+Edge = Graph.Edge
+</code></pre></details><details class="code glass"><summary><span class="btn primary small"><span class="c-show">Show</span><span class="c-hide">Hide</span>&nbsp;IndexMinPQ.py</span><small>106 lines</small></summary><pre><code>&quot;&quot;&quot;
+IndexMinPQ.py
+
+Indexed min priority queue (binary heap). Items are integers 0..n-1, each with a
+float key. Supports push, pop-min, contains and update (decrease OR increase key)
+in O(log n).
+&quot;&quot;&quot;
+
+
+class IndexMinPQ:
+
+    def __init__(self, n: int):
+        self.n = n
+        self._heap = []                 # heap position : item index
+        self._pos = [-1] * n            # item index : heap position (-1 = absent)
+        self._key = [None] * n          # item index : key
+
+    def isEmpty(self) -&gt; bool:
+        return not self._heap
+
+    def size(self) -&gt; int:
+        return len(self._heap)
+
+    def __len__(self):
+        return len(self._heap)
+
+    def contains(self, i: int) -&gt; bool:
+        self._check(i)
+        return self._pos[i] != -1
+
+    def push(self, i: int, key: float):
+        self._check(i)
+        if self._pos[i] != -1:
+            raise ValueError(f&#x27;index {i} is already in the queue&#x27;)
+        self._key[i] = key
+        self._pos[i] = len(self._heap)
+        self._heap.append(i)
+        self._swim(self._pos[i])
+
+    def pop(self) -&gt; tuple[int, float]:
+        &quot;&quot;&quot;Remove and return (index, key) with the smallest key.&quot;&quot;&quot;
+        if not self._heap:
+            raise IndexError(&#x27;pop from empty IndexMinPQ&#x27;)
+        top = self._heap[0]
+        key = self._key[top]
+        last = self._heap.pop()
+        self._pos[top] = -1
+        self._key[top] = None
+        if self._heap:
+            self._heap[0] = last
+            self._pos[last] = 0
+            self._sink(0)
+        return top, key
+
+    def peek(self) -&gt; tuple[int, float]:
+        top = self._heap[0]
+        return top, self._key[top]
+
+    def update(self, i: int, key: float):
+        self._check(i)
+        if self._pos[i] == -1:
+            raise KeyError(f&#x27;index {i} is not in the queue&#x27;)
+        self._key[i] = key
+        self._swim(self._pos[i])
+        self._sink(self._pos[i])
+
+    def keyOf(self, i: int) -&gt; float:
+        return self._key[i]
+
+    # ---- internals ------------------------------------------------------
+    def _check(self, i: int):
+        if not 0 &lt;= i &lt; self.n:
+            raise IndexError(f&#x27;index {i} out of range 0..{self.n - 1}&#x27;)
+
+    def _less(self, a: int, b: int) -&gt; bool:
+        return self._key[self._heap[a]] &lt; self._key[self._heap[b]]
+
+    def _swap(self, a: int, b: int):
+        h = self._heap
+        h[a], h[b] = h[b], h[a]
+        self._pos[h[a]] = a
+        self._pos[h[b]] = b
+
+    def _swim(self, k: int):
+        while k &gt; 0:
+            parent = (k - 1) // 2
+            if self._less(k, parent):
+                self._swap(k, parent)
+                k = parent
+            else:
+                break
+
+    def _sink(self, k: int):
+        n = len(self._heap)
+        while True:
+            child = 2 * k + 1
+            if child &gt;= n:
+                break
+            if child + 1 &lt; n and self._less(child + 1, child):
+                child += 1
+            if self._less(child, k):
+                self._swap(k, child)
+                k = child
+            else:
+                break
+</code></pre></details></div><div class="actions"><a class="btn primary small" href="https://github.com/sawyerr-mit/Projects/blob/main/Djikstra%27s%20Algorithm/visualize.ipynb" target="_blank" rel="noopener">View visualize.ipynb on GitHub</a></div><div class="panel glass runbox"><h3 class="runh">Run it</h3><pre class="run"><code>jupyter notebook visualize.ipynb</code></pre><p class="muted">Install dependencies with <code>pip install -r requirements.txt</code> from the <a class="btn primary small inline" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">Projects repository</a>.</p></div></section>
+  <section id="downloads" class="section wrap">
+    <h2>Downloads</h2>
+    <div class="panel glass"><div class="downloads"><a class="btn primary get dl" href="../assets/projects/dijkstra/dijkstra-source.zip" download><span>Source files (ZIP)</span><small>ZIP</small></a><a class="btn primary get dl" href="../assets/projects/dijkstra/search.py" download><span>search.py</span><small>PY</small></a><a class="btn primary get dl" href="../assets/projects/dijkstra/graph.py" download><span>graph.py</span><small>PY</small></a><a class="btn primary get dl" href="../assets/projects/dijkstra/IndexMinPQ.py" download><span>IndexMinPQ.py</span><small>PY</small></a><a class="btn primary get dl" href="../assets/projects/dijkstra/visualize.ipynb" download><span>visualize.ipynb</span><small>IPYNB</small></a></div></div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>&copy; <span id="yr">2026</span> Sawyer Rooney</span>
+  <div class="foot-links">
+    <a class="btn primary small" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn primary small" href="https://www.linkedin.com/in/sawyer-rooney-ab3384444/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn primary small" href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="../script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects | Sawyer Rooney</title>
+  <meta name="description" content="Projects by Sawyer Rooney in aerospace, photonics, robotics, machine learning and numerical methods.">
+  <meta name="theme-color" content="#3236e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a class="btn primary small mark" href="index.html">Sawyer Rooney</a>
+    <div class="nav-links">
+      <a class="btn primary small" href="index.html#about">About</a>
+      <a class="btn primary small" href="index.html#experience">Experience</a>
+      <a class="btn primary small active" href="projects.html" aria-current="page">Projects</a>
+      <a class="btn primary small" href="index.html#education">Education</a>
+      <a class="btn primary small" href="index.html#skills">Skills</a>
+      <a class="btn primary small" href="index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="section wrap">
+    <h1 class="page-title">Projects</h1>
+    <div class="sortbar glass">
+      <span class="sort-label" id="sort-label">Sort by</span>
+      <div class="sort-btns" role="group" aria-labelledby="sort-label">
+        <button class="btn primary small" type="button" data-sort="recency" aria-pressed="true">Recency</button>
+        <button class="btn primary small" type="button" data-sort="scale" aria-pressed="false">Scale</button>
+      </div>
+      <p class="sort-note" id="sort-note" aria-live="polite">Newest first. Each project is ordered by when it started.</p>
+    </div>
+    <p class="scale-key">Scale reflects scope: Large is team or research-grade work with several subsystems, Medium is a multi-file program, Small is a focused single-script study.</p>
+    <div class="cards" id="grid">
+      <article class="card glass" data-date="2026-09" data-scale="3">
+        <div class="media wide"><span class="media-ph"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 11.6 4.2-5 3.1 3.6 2.2-2.4L19 16.6V7H5v9.6ZM15.5 10.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4Z" fill="currentColor"/></svg>Project image<small>assets/project-rcs.jpg</small></span><img src="assets/project-rcs.jpg" alt="Cold-gas RCS for a 540 lb lander" loading="lazy" decoding="async" onerror="this.remove()"></div>
+        <p class="kicker">Aerospace &middot; Sept 2026 – Present</p>
+        <h3>Cold-gas RCS for a 540 lb lander</h3>
+        <p class="lead">Nitrogen reaction control system for the MIT Rocket Team&#x27;s collegiate lander, built around thrust, moment arms and available feed pressure.</p>
+        <ul class="chips"><li class="scale">Scale: Large</li><li>SolidWorks</li><li>Python</li><li>Fluid mechanics</li><li>SLA printing</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/rcs.html" aria-label="View project: Cold-gas RCS for a 540 lb lander">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2026-10" data-scale="3">
+        <div class="media wide"><span class="media-ph"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 11.6 4.2-5 3.1 3.6 2.2-2.4L19 16.6V7H5v9.6ZM15.5 10.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4Z" fill="currentColor"/></svg>Project image<small>assets/project-photonics.jpg</small></span><img src="assets/project-photonics.jpg" alt="Inverse design of Smith-Purcell radiators" loading="lazy" decoding="async" onerror="this.remove()"></div>
+        <p class="kicker">Photonics &middot; Oct 2026 – Present</p>
+        <h3>Inverse design of Smith-Purcell radiators</h3>
+        <p class="lead">Silicon nanowire photonic crystals tuned to convert coherent free electrons into coherent ultraviolet light.</p>
+        <ul class="chips"><li class="scale">Scale: Large</li><li>Meep</li><li>FDTD</li><li>Optimization</li><li>Machine learning</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/photonics.html" aria-label="View project: Inverse design of Smith-Purcell radiators">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2025-06" data-scale="3">
+        <div class="media wide"><span class="media-ph"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm1 11.6 4.2-5 3.1 3.6 2.2-2.4L19 16.6V7H5v9.6ZM15.5 10.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4Z" fill="currentColor"/></svg>Project image<small>assets/project-chess.jpg</small></span><img src="assets/project-chess.jpg" alt="Adaptive chess-playing robot" loading="lazy" decoding="async" onerror="this.remove()"></div>
+        <p class="kicker">Robotics &middot; Summer 2025</p>
+        <h3>Adaptive chess-playing robot</h3>
+        <p class="lead">A Kinova arm and depth camera that read a physical chessboard, follow human moves and respond with moves of their own.</p>
+        <ul class="chips"><li class="scale">Scale: Large</li><li>ROS 2</li><li>MoveIt</li><li>OpenCV</li><li>Inverse kinematics</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/chess.html" aria-label="View project: Adaptive chess-playing robot">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2026-03" data-scale="2">
+        <div class="media wide"><img src="assets/projects/dijkstra/road-graph-search.png" alt="BFS, Dijkstra and A* on a road graph" loading="lazy" decoding="async"></div>
+        <p class="kicker">Algorithms &middot; Spring 2026</p>
+        <h3>BFS, Dijkstra and A* on a road graph</h3>
+        <p class="lead">Three shortest-path searches written from scratch and compared on a road graph of about 104,000 vertices.</p>
+        <ul class="chips"><li class="scale">Scale: Medium</li><li>Python</li><li>Graph algorithms</li><li>Priority queues</li><li>Matplotlib</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/dijkstra.html" aria-label="View project: BFS, Dijkstra and A* on a road graph">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2025-01" data-scale="2">
+        <div class="media wide peek" aria-hidden="true"><pre>def minimax(board, depth, alpha, beta, maximizing, player):
+    opponent = P1 if player == P2 else P2
+
+    # If there are no valid moves remaining the game is a draw
+    valid_cols = valid_moves(board)
+    if not valid_cols:
+        return 0, None
+
+    # Check if the side to move has an immediate win. If so retu
+    # for the AI or negative infinity for the opponent
+    for col in valid_cols:
+        row = drop(board, col, player if maximizing else opponen
+        if row != -1:
+            if winner(board, row, col, player if maximizing else</pre></div>
+        <p class="kicker">Games and AI &middot; 2022 – Present</p>
+        <h3>Connect Four AI</h3>
+        <p class="lead">A Pygame Connect Four you play against an AI that searches 14 moves ahead with minimax and alpha-beta pruning.</p>
+        <ul class="chips"><li class="scale">Scale: Medium</li><li>Python</li><li>Pygame</li><li>Minimax</li><li>Alpha-beta pruning</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/connect4.html" aria-label="View project: Connect Four AI">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2025-10" data-scale="2">
+        <div class="media wide"><img src="assets/projects/mnist/sample-1.png" alt="MNIST neural network from scratch" loading="lazy" decoding="async"></div>
+        <p class="kicker">Machine learning &middot; Oct 2025 – Jan 2026</p>
+        <h3>MNIST neural network from scratch</h3>
+        <p class="lead">A handwritten-digit classifier written with NumPy only: forward pass, backpropagation, cross-entropy loss and mini-batch training.</p>
+        <ul class="chips"><li class="scale">Scale: Medium</li><li>Python</li><li>NumPy</li><li>Backpropagation</li><li>Pillow</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/mnist.html" aria-label="View project: MNIST neural network from scratch">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2026-02" data-scale="2">
+        <div class="media wide fit"><img src="assets/projects/rfc/confusion-matrix.png" alt="Hazardous asteroid classifier" loading="lazy" decoding="async"></div>
+        <p class="kicker">Machine learning &middot; Spring 2026</p>
+        <h3>Hazardous asteroid classifier</h3>
+        <p class="lead">A Random Forest that predicts whether an asteroid is potentially hazardous, trained on about 10,000 objects from NASA&#x27;s NeoWs API.</p>
+        <ul class="chips"><li class="scale">Scale: Medium</li><li>Python</li><li>pandas</li><li>scikit-learn</li><li>REST APIs</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/rfc.html" aria-label="View project: Hazardous asteroid classifier">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2025-01" data-scale="1">
+        <div class="media wide"><img src="assets/projects/svd/uncompressed.jpg" alt="SVD image compression" loading="lazy" decoding="async"></div>
+        <p class="kicker">Numerical methods &middot; 2022 – Present</p>
+        <h3>SVD image compression</h3>
+        <p class="lead">Low-rank image approximation with a truncated singular value decomposition, applied to each color channel.</p>
+        <ul class="chips"><li class="scale">Scale: Small</li><li>Python</li><li>NumPy</li><li>OpenCV</li><li>Linear algebra</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/svd.html" aria-label="View project: SVD image compression">View project</a></p>
+      </article>
+      <article class="card glass" data-date="2025-01" data-scale="1">
+        <div class="media wide peek" aria-hidden="true"><pre># https://en.wikipedia.org/wiki/Companion_matrix
+def companion_matrix(coeffs):
+    coeffs = np.asarray(coeffs, dtype=float)
+
+    if len(coeffs) &lt; 2:
+        raise ValueError(&quot;Polynomial must have degree &gt;= 1.&quot;)
+
+    coeffs = coeffs / coeffs[0]
+    n = len(coeffs) - 1
+
+    C = np.zeros((n, n))
+    C[1:, :-1] = np.eye(n - 1)
+    C[:, -1] = -coeffs[1:][::-1]
+</pre></div>
+        <p class="kicker">Numerical methods &middot; 2022 – Present</p>
+        <h3>QR algorithm polynomial solver</h3>
+        <p class="lead">Finds polynomial roots as the eigenvalues of a companion matrix, using an iterative QR algorithm.</p>
+        <ul class="chips"><li class="scale">Scale: Small</li><li>Python</li><li>NumPy</li><li>Linear algebra</li><li>Eigenvalues</li></ul>
+        <p class="more"><a class="btn primary small stretch" href="projects/qr.html" aria-label="View project: QR algorithm polynomial solver">View project</a></p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="footer wrap">
+  <span>&copy; <span id="yr">2026</span> Sawyer Rooney</span>
+  <div class="foot-links">
+    <a class="btn primary small" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn primary small" href="https://www.linkedin.com/in/sawyer-rooney-ab3384444/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn primary small" href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>

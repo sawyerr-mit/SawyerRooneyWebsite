@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QR algorithm polynomial solver | Sawyer Rooney</title>
+  <meta name="description" content="Finds polynomial roots as the eigenvalues of a companion matrix, using an iterative QR algorithm.">
+  <meta name="theme-color" content="#3236e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a class="btn primary small mark" href="../index.html">Sawyer Rooney</a>
+    <div class="nav-links">
+      <a class="btn primary small" href="../index.html#about">About</a>
+      <a class="btn primary small" href="../index.html#experience">Experience</a>
+      <a class="btn primary small active" href="../projects.html" aria-current="page">Projects</a>
+      <a class="btn primary small" href="../index.html#education">Education</a>
+      <a class="btn primary small" href="../index.html#skills">Skills</a>
+      <a class="btn primary small" href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="section wrap">
+    <a class="btn primary small" href="../projects.html">All projects</a>
+    <div class="panel glass p-head">
+      <p class="kicker">Numerical methods &middot; 2022 – Present</p>
+      <h1>QR algorithm polynomial solver</h1>
+      <p class="sub">Finds polynomial roots as the eigenvalues of a companion matrix, using an iterative QR algorithm.</p>
+      <ul class="chips" aria-label="Tools"><li>Python</li><li>NumPy</li><li>Linear algebra</li><li>Eigenvalues</li></ul>
+      <div class="actions">
+        <a class="btn primary" href="#downloads">Downloads</a>
+        <a class="btn primary" href="https://github.com/sawyerr-mit/Projects/tree/main/QR%20Factorization%20Polynomial%20Solver" target="_blank" rel="noopener">View on GitHub</a>
+        <button class="btn primary" type="button" onclick="print()">Save page as PDF</button>
+      </div>
+    </div>
+    
+  </section>
+
+  <section id="overview" class="section wrap">
+    <h2>Overview</h2>
+    <div class="panel glass about">
+      <div class="prose"><p>Polynomial coefficients are turned into a companion matrix, whose eigenvalues are the polynomial&#x27;s roots. The QR algorithm then repeatedly factors the matrix as A = QR and forms RQ. After enough iterations the diagonal converges to the eigenvalues, so every root is found at the same time.</p><p>The iteration is written by hand and each factorization uses NumPy&#x27;s np.linalg.qr. The included example is a degree-7 polynomial with coefficients 1, −28, 322, −1960, 6769, −13132, 13068, −5040, whose roots are the integers 1 through 7.</p></div>
+      <dl class="facts"><div><dt>Role</dt><dd>Design and implementation</dd></div><div><dt>Timeline</dt><dd>2022 – Present</dd></div><div><dt>Focus</dt><dd>Numerical methods</dd></div><div><dt>Tools</dt><dd>Python, NumPy, Linear algebra, Eigenvalues</dd></div></dl>
+    </div>
+  </section>
+  
+  <section id="highlights" class="section wrap">
+    <h2>Highlights</h2>
+    <div class="panel glass"><ul class="bullets"><li>Builds the companion matrix of any polynomial from its coefficients.</li><li>Iterates A → RQ so the diagonal converges to all eigenvalues at once.</li><li>Checked against a degree-7 polynomial whose roots are 1 through 7.</li></ul></div>
+  </section>
+  <section id="source" class="section wrap"><h2>Source code</h2><div class="stack"><details class="code glass"><summary><span class="btn primary small"><span class="c-show">Show</span><span class="c-hide">Hide</span>&nbsp;QRFactorization.py</span><small>45 lines</small></summary><pre><code>import numpy as np
+
+# This generates a matrix whose eigenvalues are equivalent to the roots of a polynomial
+# with given coefficients. To understand how this works, see:
+# https://en.wikipedia.org/wiki/Companion_matrix
+def companion_matrix(coeffs):
+    coeffs = np.asarray(coeffs, dtype=float)
+
+    if len(coeffs) &lt; 2:
+        raise ValueError(&quot;Polynomial must have degree &gt;= 1.&quot;)
+
+    coeffs = coeffs / coeffs[0]
+    n = len(coeffs) - 1
+
+    C = np.zeros((n, n))
+    C[1:, :-1] = np.eye(n - 1)
+    C[:, -1] = -coeffs[1:][::-1]
+
+    return C
+
+# This algorithm is simple to implement, but has considerable
+# perfomance benefits to basic guess and check methods.
+# The general theory of this algorithm is very similar to the 
+# method of power iteration, but isolates all eigenvalues
+# simultaneously rather than only the largest eigenvalue.
+# To understand how this works, see:
+# https://en.wikipedia.org/wiki/QR_algorithm
+def QR_Algorithm(A):
+    Ak = A.copy()
+    for _ in range(1000):
+        Q, R = np.linalg.qr(Ak)
+        Ak = R @ Q
+    return np.diag(Ak)
+
+# The coeffs list encodes the polynomial, change the coeffs to solve desired polynomial.
+if __name__ == &quot;__main__&quot;:
+    coeffs = [1, -28, 322, -1960, 6769, -13132, 13068, -5040]
+    C = companion_matrix(coeffs)
+
+    np.set_printoptions(precision=0, suppress=True, floatmode=&#x27;fixed&#x27;)
+
+    print(&quot;Coefficients:&quot;, coeffs)
+    print(&quot;Companion matrix:\n&quot;, C)
+    print(&quot;Eigenvalues:&quot;, QR_Algorithm(C))
+</code></pre></details></div><div class="actions"></div><div class="panel glass runbox"><h3 class="runh">Run it</h3><pre class="run"><code>python QRFactorization.py</code></pre><p class="muted">Install dependencies with <code>pip install -r requirements.txt</code> from the <a class="btn primary small inline" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">Projects repository</a>.</p></div></section>
+  <section id="downloads" class="section wrap">
+    <h2>Downloads</h2>
+    <div class="panel glass"><div class="downloads"><a class="btn primary get dl" href="../assets/projects/qr/qr-source.zip" download><span>Source files (ZIP)</span><small>ZIP</small></a><a class="btn primary get dl" href="../assets/projects/qr/QRFactorization.py" download><span>QRFactorization.py</span><small>PY</small></a></div></div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>&copy; <span id="yr">2026</span> Sawyer Rooney</span>
+  <div class="foot-links">
+    <a class="btn primary small" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn primary small" href="https://www.linkedin.com/in/sawyer-rooney-ab3384444/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn primary small" href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="../script.js" defer></script>
+</body>
+</html>

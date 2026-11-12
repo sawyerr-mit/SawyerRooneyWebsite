@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SVD image compression | Sawyer Rooney</title>
+  <meta name="description" content="Low-rank image approximation with a truncated singular value decomposition, applied to each color channel.">
+  <meta name="theme-color" content="#3236e4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a class="btn primary small mark" href="../index.html">Sawyer Rooney</a>
+    <div class="nav-links">
+      <a class="btn primary small" href="../index.html#about">About</a>
+      <a class="btn primary small" href="../index.html#experience">Experience</a>
+      <a class="btn primary small active" href="../projects.html" aria-current="page">Projects</a>
+      <a class="btn primary small" href="../index.html#education">Education</a>
+      <a class="btn primary small" href="../index.html#skills">Skills</a>
+      <a class="btn primary small" href="../index.html#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="section wrap">
+    <a class="btn primary small" href="../projects.html">All projects</a>
+    <div class="panel glass p-head">
+      <p class="kicker">Numerical methods &middot; 2022 – Present</p>
+      <h1>SVD image compression</h1>
+      <p class="sub">Low-rank image approximation with a truncated singular value decomposition, applied to each color channel.</p>
+      <ul class="chips" aria-label="Tools"><li>Python</li><li>NumPy</li><li>OpenCV</li><li>Linear algebra</li></ul>
+      <div class="actions">
+        <a class="btn primary" href="#downloads">Downloads</a>
+        <a class="btn primary" href="https://github.com/sawyerr-mit/Projects/tree/main/SVD%20Image%20Compression" target="_blank" rel="noopener">View on GitHub</a>
+        <button class="btn primary" type="button" onclick="print()">Save page as PDF</button>
+      </div>
+    </div>
+    <div class="gallery"><figure class="shot glass"><img src="../assets/projects/svd/uncompressed.jpg" alt="Original image." loading="lazy" decoding="async"><figcaption>Original image.</figcaption></figure><figure class="shot glass"><img src="../assets/projects/svd/compressed.jpg" alt="Rank 40 per channel." loading="lazy" decoding="async"><figcaption>Rank 40 per channel.</figcaption></figure><figure class="shot glass"><img src="../assets/projects/svd/red.jpg" alt="Red channel, rank 40." loading="lazy" decoding="async"><figcaption>Red channel, rank 40.</figcaption></figure><figure class="shot glass"><img src="../assets/projects/svd/green.jpg" alt="Green channel, rank 40." loading="lazy" decoding="async"><figcaption>Green channel, rank 40.</figcaption></figure><figure class="shot glass"><img src="../assets/projects/svd/blue.jpg" alt="Blue channel, rank 40." loading="lazy" decoding="async"><figcaption>Blue channel, rank 40.</figcaption></figure></div>
+  </section>
+
+  <section id="overview" class="section wrap">
+    <h2>Overview</h2>
+    <div class="panel glass about">
+      <div class="prose"><p>The script splits an image into its blue, green and red channels, decomposes each with NumPy&#x27;s SVD, keeps only the largest k = 40 singular values and recombines the channels. A rank-40 approximation stores a small fraction of the numbers in the original matrix while keeping the image&#x27;s main structure.</p><p>It also writes each channel and its compressed version next to the full-color result, so the effect of truncation can be compared channel by channel.</p></div>
+      <dl class="facts"><div><dt>Role</dt><dd>Design and implementation</dd></div><div><dt>Timeline</dt><dd>2022 – Present</dd></div><div><dt>Focus</dt><dd>Numerical methods</dd></div><div><dt>Tools</dt><dd>Python, NumPy, OpenCV, Linear algebra</dd></div></dl>
+    </div>
+  </section>
+  
+  <section id="highlights" class="section wrap">
+    <h2>Highlights</h2>
+    <div class="panel glass"><ul class="bullets"><li>Splits an image into blue, green and red channels and decomposes each with SVD.</li><li>Keeps only the largest 40 singular values per channel, then recombines them.</li><li>Saves each channel before and after compression so the effect of truncation is visible.</li></ul></div>
+  </section>
+  <section id="source" class="section wrap"><h2>Source code</h2><div class="stack"><details class="code glass"><summary><span class="btn primary small"><span class="c-show">Show</span><span class="c-hide">Hide</span>&nbsp;image_compression.py</span><small>63 lines</small></summary><pre><code>import numpy as np
+import cv2
+import os
+
+# Run relative to this file. If you change the file, add it in the same place as the placeholder.
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+# Image Pre-Processing
+
+# Generic image, any image works.
+img_path = &quot;cat.jpg&quot;
+k = 40 # Compression Factor
+
+# Load image and split rgb
+img_bgr = cv2.imread(img_path)
+b, g, r = cv2.split(img_bgr)
+h, w = img_bgr.shape[:2]
+
+# Create rgb images
+blue_img = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+blue_img[:,:,0] = b
+
+green_img = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+green_img[:,:,1] = g
+
+red_img = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+red_img[:,:,2] = r
+
+cv2.imwrite(&quot;blue.jpg&quot;, blue_img)
+cv2.imwrite(&quot;green.jpg&quot;, green_img)
+cv2.imwrite(&quot;red.jpg&quot;, red_img)
+cv2.imwrite(&quot;uncompressed.jpg&quot;, cv2.merge([b, g, r]))
+
+# Image Compression Algorithm
+# This algorithm applies an SVD decomposition to the images,
+# and truncates at the largest singular values. For a better
+# understanding of how this algorithm works, see:
+# https://en.wikipedia.org/wiki/Singular_value_decomposition 
+def compress(arr, k):
+    U, S, Vt = np.linalg.svd(arr, full_matrices=False)
+    compressed_image = np.dot(U[:, :k], np.dot(np.diag(S[:k]), Vt[:k, :]))
+    return np.clip(compressed_image, 0, 255).astype(np.uint8)
+
+# Compress each colorway and recombine + save
+
+b_comp = compress(b, k)
+g_comp = compress(g, k)
+r_comp = compress(r, k)
+
+blue_compressed = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+blue_compressed[:,:,0] = b_comp
+
+green_compressed = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+green_compressed[:,:,1] = g_comp
+
+red_compressed = np.zeros((h,w,3), dtype=&#x27;uint8&#x27;)
+red_compressed[:,:,2] = r_comp
+
+cv2.imwrite(&quot;blue_compressed.jpg&quot;, blue_compressed)
+cv2.imwrite(&quot;green_compressed.jpg&quot;, green_compressed)
+cv2.imwrite(&quot;red_compressed.jpg&quot;, red_compressed)
+cv2.imwrite(&quot;compressed.jpg&quot;, cv2.merge([b_comp, g_comp, r_comp]))
+</code></pre></details></div><div class="actions"></div><div class="panel glass runbox"><h3 class="runh">Run it</h3><pre class="run"><code>python image_compression.py</code></pre><p class="muted">Install dependencies with <code>pip install -r requirements.txt</code> from the <a class="btn primary small inline" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">Projects repository</a>.</p></div></section>
+  <section id="downloads" class="section wrap">
+    <h2>Downloads</h2>
+    <div class="panel glass"><div class="downloads"><a class="btn primary get dl" href="../assets/projects/svd/svd-source.zip" download><span>Source files (ZIP)</span><small>ZIP</small></a><a class="btn primary get dl" href="../assets/projects/svd/image_compression.py" download><span>image_compression.py</span><small>PY</small></a></div></div>
+  </section>
+
+</main>
+
+<footer class="footer wrap">
+  <span>&copy; <span id="yr">2026</span> Sawyer Rooney</span>
+  <div class="foot-links">
+    <a class="btn primary small" href="https://github.com/sawyerr-mit/Projects" target="_blank" rel="noopener">GitHub</a>
+    <a class="btn primary small" href="https://www.linkedin.com/in/sawyer-rooney-ab3384444/" target="_blank" rel="noopener">LinkedIn</a>
+    <a class="btn primary small" href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="../script.js" defer></script>
+</body>
+</html>
